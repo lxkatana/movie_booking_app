@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:movie_booking/views/credentials/login.dart';
+import 'package:movie_booking/views/screens/onBoarding.dart';
 
 class SplashScreen extends StatefulWidget {
   SplashScreen({super.key});
@@ -14,10 +14,10 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // 3 seconds until navigate to the next page !
-    Timer(Duration(seconds: 3), () {
+    // 8 seconds until navigate to the next page !
+    Timer(Duration(seconds: 8), () {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => LoginScreen()),
+        MaterialPageRoute(builder: (context) => onBoarding()),
       );
     });
   }
@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Image.asset('assets/images/img1.jpeg', height: 180, width: double.infinity,),
+          Image.asset('assets/images/logo.png', height: 130, width: double.infinity,),
           SizedBox(height: 28,),
           CircularProgressIndicator()
         ],

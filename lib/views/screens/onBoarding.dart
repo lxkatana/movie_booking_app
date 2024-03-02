@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movie_booking/views/screens/home.dart';
+import 'package:movie_booking/views/credentials/login.dart';
 
 class onBoarding extends StatefulWidget {
   onBoarding({super.key});
@@ -9,8 +9,8 @@ class onBoarding extends StatefulWidget {
 }
 
 class _onBoardingState extends State<onBoarding> {
-  void navigateToHome(){
-    Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+  void navigateToLogin(){
+    Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
   }
 
   @override
@@ -31,7 +31,7 @@ class _onBoardingState extends State<onBoarding> {
                 textAlign: TextAlign.left,
                 style: TextStyle(
                     color: Colors.white,
-                    fontSize: 32.1,
+                    fontSize: 33,
                     fontWeight: FontWeight.bold),
               ),
             ),
@@ -41,10 +41,10 @@ class _onBoardingState extends State<onBoarding> {
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                "Book tickets to you're favourite movie !",
+                "Book tickets for your favourite shows !",
                 style: TextStyle(
                     color: Colors.white,
-                    fontSize: 18.5,
+                    fontSize: 17,
                     fontWeight: FontWeight.w500),
               ),
             ),
@@ -52,20 +52,20 @@ class _onBoardingState extends State<onBoarding> {
               height: 28,
             ),
             Image.asset(
-              "assets/images/poster4.jpeg",
+              "assets/images/onBoardImg.jpeg",
               fit: BoxFit.cover,
-              height: 255,
+              height: 400,
               width: double.infinity,
             ),
             SizedBox(
               height: 28,
             ),
             SizedBox(
-                width: 280,
+                width: 240,
                 height: 50,
                 child: ElevatedButton(
                     onPressed: () {
-                      navigateToHome();
+                      navigateToLogin();
                     },
                     style: ButtonStyle(
                         backgroundColor:

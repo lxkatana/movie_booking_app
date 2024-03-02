@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:movie_booking/views/screens/movie_hall.dart';
+import 'package:movie_booking/views/screens/splash.dart';
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
@@ -8,7 +8,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MovieHall(),
+      home: SplashScreen(),
     );
   }
 }
