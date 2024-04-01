@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:movie_booking/views/screens/splash.dart';
+import 'package:movie_booking/views/screens/home.dart';
+import 'package:movie_booking/views/screens/seats.dart';
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
@@ -8,7 +9,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: SplashScreen(),
+      home: MovieSeats(),
     );
   }
 }

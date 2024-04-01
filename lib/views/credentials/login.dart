@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_booking/services/user_services.dart';
 import 'package:movie_booking/views/credentials/register.dart';
 import 'package:movie_booking/views/screens/home.dart';
 
@@ -12,11 +13,28 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _gmail = TextEditingController();
   TextEditingController _password = TextEditingController();
+  String errorMessage = '';
   final _formKey = GlobalKey<FormState>();
 
-  void _onSubmit() {
+  void _onSubmit() async {
     if (_formKey.currentState!.validate()) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+      try {
+        final success = await UserService.login(_gmail.text, _password.text);
+        if (success) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen()),
+          );
+        } else {
+          print('Login failed ! Please check your credentials.');
+          setState(() {
+            errorMessage = 'Login failed ! Please check your credentials.';
+          });
+        }
+      } catch (e) {
+        // Handle error
+        print('Error occurred during login: $e');
+      }
     }
   }
 
@@ -79,9 +97,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         if (value == null || value.isEmpty) {
                           return "Please enter a valid password";
                         }
-                        if (value.length < 8) {
-                          return "Please enter an 8 character password";
-                        }
+                        // if (value.length < 8) {
+                        //   return "Please enter an 8 character password";
+                        // }
                         return null;
                       },
                       obscureText: true,
@@ -103,6 +121,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
+                    errorMessage.isNotEmpty
+                        ? Text(
+                            errorMessage,
+                            style: TextStyle(
+                              color: Colors.red,
+                            ),
+                            textAlign: TextAlign.start,
+                          )
+                        : SizedBox(),
                     SizedBox(height: 20),
                     SizedBox(
                       width: 280,
@@ -144,11 +171,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: Text(
                             "Sign Up",
                             style: TextStyle(
-                              color: Colors.blue,
-                              decoration: TextDecoration.underline,
-                              decorationColor: Colors.blue,
-                              fontWeight: FontWeight.bold
-                            ),
+                                color: Colors.blue,
+                                decoration: TextDecoration.underline,
+                                decorationColor: Colors.blue,
+                                fontWeight: FontWeight.bold),
                           ),
                         ),
                       ],
