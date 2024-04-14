@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movie_booking/model/movie_show.dart';
 import 'package:movie_booking/services/movie_services.dart';
-import 'package:movie_booking/views/screens/home.dart';
+import 'package:movie_booking/views/screens/seats.dart';
 
 class MovieHall extends StatefulWidget {
   final int movieId;
@@ -51,6 +51,7 @@ class _MovieHallState extends State<MovieHall> {
       print("Hall ID: ${show.hall.id}");
       print("Date: ${show.date}");
       print("Start Time: ${show.startTime}");
+      print("Price: ${show.price.toString()}");
       // Print other relevant information as needed
     });
 
@@ -61,6 +62,7 @@ class _MovieHallState extends State<MovieHall> {
       print("Hall ID: ${show.hall.id}");
       print("Date: ${show.date}");
       print("Start Time: ${show.startTime}");
+      print("Price: ${show.price.toString()}");
       // Print other relevant information as needed
     });
 
@@ -71,21 +73,13 @@ class _MovieHallState extends State<MovieHall> {
   void initState() {
     super.initState();
     setDates();
-    _movieShowsFuture = _fetchFilteredMovieShows();
     currentPageIndex = 1;
+    _movieShowsFuture = _fetchFilteredMovieShows();
   }
 
   void setDates() {
     today = DateTime.now();
     tomorrow = today.add(Duration(days: 1));
-  }
-
-  String getTodayString() {
-    return "${today.year}-${today.month}-${today.day}";
-  }
-
-  String getTomorrowString() {
-    return "${tomorrow.year}-${tomorrow.month}-${tomorrow.day}";
   }
 
   @override
@@ -97,8 +91,7 @@ class _MovieHallState extends State<MovieHall> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => HomeScreen()));
+              Navigator.of(context).pop();
             },
           ),
           title: Padding(
@@ -134,86 +127,107 @@ class _MovieHallState extends State<MovieHall> {
                     colors: [Colors.black87, Colors.black],
                   ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(
-                                8), // Same as ClipRRect's borderRadius
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.white
-                                    .withOpacity(0.1), // Shadow color
-                                spreadRadius: 2, // Spread radius
-                                blurRadius: 5, // Blur radius
-                                offset: Offset(0, 3), // Shadow offset
+                child: FutureBuilder<List<MovieShow>>(
+                  future: _fetchFilteredMovieShows(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return Center(child: Text('No movie data found'));
+                    } else {
+                      MovieShow firstMovieShow = snapshot.data!.first;
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.white.withOpacity(0.1),
+                                      spreadRadius: 2,
+                                      blurRadius: 5,
+                                      offset: Offset(0, 3),
+                                    ),
+                                  ],
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.network(
+                                    firstMovieShow.movie.image ??
+                                        'https://imgs.search.brave.com/Jp6ngmaC-F_2y5_7UN2IF8HtgALS20IY1-qn-o5x8EA/rs:fit:860:0:0/g:ce/aHR0cHM6Ly90My5m/dGNkbi5uZXQvanBn/LzA0LzI5LzQyLzQy/LzM2MF9GXzQyOTQy/NDI3OV9kb2tFRndu/U29KZU9LcHF2VjF0/dFh1bThwaUVTc0Y1/TC5qcGc',
+                                    height: 200,
+                                    width: 165,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: Image.asset(
-                              "assets/images/poster2.jpeg",
-                              height: 200,
-                              width: 165,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(width: 6),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding:
-                                EdgeInsets.only(left: 20, right: 20, top: 10),
-                            height: 200,
-                            width: double.infinity,
+                          SizedBox(width: 6),
+                          Expanded(
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text("Movie Id: " + widget.movieId.toString(),
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 22,
-                                        color: Colors.white)),
-                                Text("Breaking Bad",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 22,
-                                        color: Colors.white)),
-                                Text("Max Bellchrome",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 19,
-                                        color: Colors.white)),
-                                Text("180 min",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 17,
-                                        color: Colors.white)),
-                                Text(
-                                  "Todays Date: " + getTodayString(),
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                                Text("Tomorrow Date: " + getTomorrowString(),
-                                    style: TextStyle(color: Colors.white)),
+                                Container(
+                                  padding: EdgeInsets.only(
+                                      left: 20, right: 20, top: 10),
+                                  height: 200,
+                                  width: double.infinity,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      // Text(
+                                      //   "Movie Id: ${firstMovieShow.movie.id}",
+                                      //   style: TextStyle(
+                                      //     fontWeight: FontWeight.bold,
+                                      //     fontSize: 22,
+                                      //     color: Colors.white,
+                                      //   ),
+                                      // ),
+                                      Text(
+                                        "Title: ${firstMovieShow.movie.title}",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          fontSize: 22,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Genre: ${firstMovieShow.movie.genre}",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 19,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      Text(
+                                        "Duration: ${firstMovieShow.movie.durationInMinute} min",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 17,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )
                               ],
                             ),
-                          )
+                          ),
                         ],
-                      ),
-                    ),
-                  ],
+                      );
+                    }
+                  },
                 ),
               ),
+
               Row(
                 children: [
                   Expanded(
@@ -264,9 +278,25 @@ class _MovieHallState extends State<MovieHall> {
                   ),
                 ],
               ),
-              currentPageIndex == 1
-                  ? todaysHallSchedule()
-                  : tomorrowsHallSchedule(),
+
+              // Use FutureBuilder to build the UI based on the completion of _movieShowsFuture
+              FutureBuilder<List<MovieShow>>(
+                future: _movieShowsFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    // Show a loading indicator while data is being fetched
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    // Show an error message if data fetching fails
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    // If data fetching is successful, display the hall schedule based on the currentPageIndex
+                    return currentPageIndex == 1
+                        ? todaysHallSchedule()
+                        : tomorrowsHallSchedule();
+                  }
+                },
+              ),
             ],
           ),
         ),
@@ -280,14 +310,6 @@ class _MovieHallState extends State<MovieHall> {
 
     return Column(
       children: [
-        Text(
-          "Today's Hall Schedule",
-          style: TextStyle(color: Colors.white),
-        ),
-        Text(
-          getTodayString(),
-          style: TextStyle(color: Colors.white),
-        ),
         Container(
           padding: EdgeInsets.all(16),
           width: double.infinity,
@@ -295,10 +317,10 @@ class _MovieHallState extends State<MovieHall> {
             color: Colors.black,
             border: Border(bottom: BorderSide(color: Colors.white, width: 0.8)),
           ),
-          child: _todayMovieShows?.isEmpty ?? true
+          child: _todayMovieShows == null || _todayMovieShows!.isEmpty
               ? Text(
-                  'No movie data found',
-                  style: TextStyle(color: Colors.white),
+                  'No show time found',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
                 )
               : ListView.builder(
                   shrinkWrap: true,
@@ -324,20 +346,13 @@ class _MovieHallState extends State<MovieHall> {
                             Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Image.asset(
-                                  "assets/images/poster1.jpeg",
-                                  height: 75,
-                                  width: 75,
-                                  fit: BoxFit.cover,
-                                ),
-                                SizedBox(width: 12),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       movieShow.cinema.name,
                                       style: TextStyle(
-                                        fontSize: 20,
+                                        fontSize: 24,
                                         fontWeight: FontWeight.bold,
                                         color: Colors.white,
                                       ),
@@ -345,8 +360,8 @@ class _MovieHallState extends State<MovieHall> {
                                     Text(
                                       movieShow.cinema.address,
                                       style: TextStyle(
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400,
                                         color: Colors.white,
                                       ),
                                     ),
@@ -354,7 +369,7 @@ class _MovieHallState extends State<MovieHall> {
                                 ),
                               ],
                             ),
-                          SizedBox(height: 8),
+                          SizedBox(height: 10),
                           SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
                             child: Row(
@@ -367,23 +382,56 @@ class _MovieHallState extends State<MovieHall> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                           children: [
-                                            Container(
-                                              padding: EdgeInsets.all(8),
-                                              margin:
-                                                  EdgeInsets.only(right: 10),
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    color: Colors.white),
-                                                borderRadius: BorderRadius.all(
-                                                  Radius.circular(12),
+                                            InkWell(
+                                              onTap: () {
+                                                print("Movie Id: " +
+                                                    movieShow.id.toString());
+                                                print("Movie Name: " +
+                                                    movieShow.movie.title
+                                                        .toString());
+                                                print("Hall Id: " +
+                                                    movieShow.hall.id
+                                                        .toString());
+                                                print("Hall Name: " +
+                                                    movieShow.hall.name
+                                                        .toString());
+                                                print("Cinema Id: " +
+                                                    movieShow.cinema.id
+                                                        .toString());
+                                                print("Cinema Name: " +
+                                                    movieShow.cinema.name);
+                                                print("Start Time: " +
+                                                    movieShow.startTime);
+                                                print("Date: " +
+                                                    movieShow.date
+                                                        .toIso8601String());
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            MovieSeats(
+                                                                movieShow:
+                                                                    movieShow)));
+                                              },
+                                              child: Container(
+                                                padding: EdgeInsets.all(8),
+                                                margin:
+                                                    EdgeInsets.only(right: 10),
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                      color: Colors.white),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                    Radius.circular(12),
+                                                  ),
                                                 ),
-                                              ),
-                                              child: Text(
-                                                movieShow.startTime,
-                                                style: TextStyle(
-                                                  fontSize: 24,
-                                                  fontWeight: FontWeight.w500,
-                                                  color: Colors.white,
+                                                child: Text(
+                                                  movieShow.startTime,
+                                                  style: TextStyle(
+                                                    fontSize: 24,
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.white,
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -416,17 +464,10 @@ class _MovieHallState extends State<MovieHall> {
   Widget tomorrowsHallSchedule() {
     int? lastCinemaId;
     String? lastStartTime;
+    String? lastHallName;
 
     return Column(
       children: [
-        Text(
-          "Tomorrow's Hall Schedule",
-          style: TextStyle(color: Colors.white),
-        ),
-        Text(
-          getTomorrowString(),
-          style: TextStyle(color: Colors.white),
-        ),
         Container(
             padding: EdgeInsets.all(16),
             width: double.infinity,
@@ -447,10 +488,13 @@ class _MovieHallState extends State<MovieHall> {
                       MovieShow movieShow = _tomorrowMovieShows![index];
                       bool sameCinemaId = lastCinemaId == movieShow.cinema.id;
                       bool sameStartTime = lastStartTime == movieShow.startTime;
+                      bool sameHallName = lastHallName == movieShow.hall.name;
                       lastCinemaId = movieShow.cinema.id;
                       lastStartTime = movieShow.startTime;
+                      lastHallName = movieShow.hall.name;
 
-                      if (sameCinemaId && sameStartTime) {
+                      // Skip displaying the movie show if the start time and hall name are the same as the previous one
+                      if (sameCinemaId && sameStartTime && sameHallName) {
                         return SizedBox.shrink();
                       }
 
@@ -463,13 +507,6 @@ class _MovieHallState extends State<MovieHall> {
                               Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Image.asset(
-                                    "assets/images/poster1.jpeg",
-                                    height: 75,
-                                    width: 75,
-                                    fit: BoxFit.cover,
-                                  ),
-                                  SizedBox(width: 12),
                                   Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -477,7 +514,7 @@ class _MovieHallState extends State<MovieHall> {
                                       Text(
                                         movieShow.cinema.name,
                                         style: TextStyle(
-                                          fontSize: 20,
+                                          fontSize: 24,
                                           fontWeight: FontWeight.bold,
                                           color: Colors.white,
                                         ),
@@ -485,8 +522,8 @@ class _MovieHallState extends State<MovieHall> {
                                       Text(
                                         movieShow.cinema.address,
                                         style: TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400,
                                           color: Colors.white,
                                         ),
                                       ),
@@ -494,7 +531,7 @@ class _MovieHallState extends State<MovieHall> {
                                   )
                                 ],
                               ),
-                            SizedBox(height: 8),
+                            SizedBox(height: 10),
                             Align(
                               alignment: Alignment.bottomLeft,
                               child: SingleChildScrollView(
@@ -508,28 +545,39 @@ class _MovieHallState extends State<MovieHall> {
                                               CrossAxisAlignment.center,
                                           children: [
                                             Column(
-                                              crossAxisAlignment: CrossAxisAlignment
-                                                  .center, // Align items to the start horizontally
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
                                               children: [
-                                                Container(
-                                                  padding: EdgeInsets.all(8),
-                                                  margin: EdgeInsets.only(
-                                                      right: 10),
-                                                  decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        color: Colors.white),
-                                                    borderRadius:
-                                                        BorderRadius.all(
-                                                      Radius.circular(12),
+                                                InkWell(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                MovieSeats(
+                                                                    movieShow:
+                                                                        movieShow)));
+                                                  },
+                                                  child: Container(
+                                                    padding: EdgeInsets.all(8),
+                                                    margin: EdgeInsets.only(
+                                                        right: 10),
+                                                    decoration: BoxDecoration(
+                                                      border: Border.all(
+                                                          color: Colors.white),
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                        Radius.circular(12),
+                                                      ),
                                                     ),
-                                                  ),
-                                                  child: Text(
-                                                    movieShow.startTime,
-                                                    style: TextStyle(
-                                                      fontSize: 24,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: Colors.white,
+                                                    child: Text(
+                                                      movieShow.startTime,
+                                                      style: TextStyle(
+                                                        fontSize: 24,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                        color: Colors.white,
+                                                      ),
                                                     ),
                                                   ),
                                                 ),

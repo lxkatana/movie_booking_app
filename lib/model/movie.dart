@@ -6,7 +6,8 @@ class Movie {
   final int durationInMinute;
   final String title;
   final String description;
-  final String? deletedDate; // Nullable field
+  final String? deletedDate;
+  final String? image;
 
   Movie({
     required this.id,
@@ -17,6 +18,7 @@ class Movie {
     required this.title,
     required this.description,
     this.deletedDate,
+    this.image,
   });
 
   factory Movie.fromJson(Map<String, dynamic> json) {
@@ -29,6 +31,7 @@ class Movie {
       title: json['title'],
       description: json['description'],
       deletedDate: json['deletedDate'],
+      image: json['image'],
     );
   }
 

@@ -1,15 +1,17 @@
 class Constants {
-  static const String baseUrl = 'http://192.168.1.69:8080/';
-  // static const String baseUrl = 'http://192.168.30.101:8080/';
+  static final String baseUrl = 'http://192.168.1.69:8080/';
 
-  static const String loginUrl = 'auth/login';
-  static const String registerUrl = 'auth/register/user';
-  static const String registerOtpUrl = 'auth/send-otp';
+  static String loginUrl = baseUrl + 'auth/login';
+  static String registerUrl = baseUrl + 'auth/register/user';
+  static String registerOtpUrl = baseUrl + 'auth/send-otp';
 
+  static String getAllMovies = baseUrl + 'movie';
+  static String getHallByMovies = baseUrl + 'show/movie';
 
-
-
-  static const String getAllMovies = baseUrl + 'movie';
-  static const String getHallByMovies = baseUrl + 'show/movie';
-  
+  static String getTakenSeatsByShowId = baseUrl + 'seat/taken';
+  static String getHiddenSeatsByHallId = baseUrl + 'seat';
+  static String reserveSeats= baseUrl + 'reservation';
+  static String paymentSeats= baseUrl + 'payment';
+  static String userReservations= baseUrl + 'reservation/bookings';
 }
+

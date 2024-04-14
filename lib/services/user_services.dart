@@ -4,23 +4,28 @@ import 'package:movie_booking/model/user_model.dart';
 import 'dart:convert';
 
 class UserService {
-  static Future<bool> login(String email, String password) async {
+  static Future<String?> login(String email, String password) async {
     try {
       final response = await http.post(
-        Uri.parse(Constants.baseUrl + Constants.loginUrl),
+        Uri.parse(Constants.loginUrl),
         body: json.encode(
             {'email': email, 'password': password, 'validateFor': 'customer'}),
         headers: {'Content-Type': 'application/json'},
       );
+
       if (response.statusCode == 200) {
-        return true;
+        print("200");
+        final responseData = json.decode(response.body);
+        final token = responseData['data']['token'];
+        return token;
       } else {
-        return false;
+        print("500");
+        return null;
       }
     } catch (e) {
       print('Error logging in: $e');
       // Handle error
-      return false;
+      return null;
     }
   }
 

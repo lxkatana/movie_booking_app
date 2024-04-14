@@ -87,9 +87,9 @@ class ProfilePage extends StatelessWidget {
               Expanded(
                 child: ListView(
                   children: [
-                    buildListTile('Edit Profile', Icons.person, () {
-                      // Add your onTap functionality here
-                    }),
+                    // buildListTile('Edit Profile', Icons.person, () {
+                    //   // Add your onTap functionality here
+                    // }),
                     buildListTile('About us', Icons.question_mark, () {
                       // Add your onTap functionality here
                     }),

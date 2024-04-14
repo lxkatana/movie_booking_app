@@ -2,9 +2,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:movie_booking/model/movie.dart';
 import 'package:movie_booking/views/credentials/login.dart';
+import 'package:movie_booking/views/screens/booking.dart';
 import 'package:movie_booking/views/screens/movie_info.dart';
 import 'package:movie_booking/services/movie_services.dart';
 import 'package:movie_booking/views/screens/user_profile.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -26,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _startSliderTimer();
+    // _startSliderTimer();
     _futureMovies = MovieService.fetchMovies();
   }
 
@@ -36,21 +38,26 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  void _startSliderTimer() {
-    Timer.periodic(Duration(seconds: 3), (timer) {
-      setState(() {
-        if (_currentPage < imageAssetPaths.length - 1) {
-          _currentPage++;
-        } else {
-          _currentPage = 0;
-        }
-      });
-      _pageController.animateToPage(
-        _currentPage,
-        duration: Duration(seconds: 3),
-        curve: Curves.easeOut,
-      );
-    });
+  // void _startSliderTimer() {
+  //   Timer.periodic(Duration(seconds: 3), (timer) {
+  //     setState(() {
+  //       if (_currentPage < imageAssetPaths.length - 1) {
+  //         _currentPage++;
+  //       } else {
+  //         _currentPage = 0;
+  //       }
+  //     });
+  //     _pageController.animateToPage(
+  //       _currentPage,
+  //       duration: Duration(seconds: 3),
+  //       curve: Curves.easeOut,
+  //     );
+  //   });
+  // }
+
+  static Future<void> removeTokenFromSharedPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove('token');
   }
 
   @override
@@ -77,7 +84,8 @@ class _HomeScreenState extends State<HomeScreen> {
               itemBuilder: (_) => [
                 PopupMenuItem(
                   child: TextButton(
-                    onPressed: () {
+                    onPressed: () async {
+                      await removeTokenFromSharedPreferences();
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(builder: (_) => LoginScreen()),
                       );
@@ -147,6 +155,23 @@ class _HomeScreenState extends State<HomeScreen> {
               ListTile(
                 title: Row(
                   children: [
+                    Icon(Icons.local_play_outlined),
+                    SizedBox(
+                      width: 8,
+                    ),
+                    Text('My Tickets',
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w500)),
+                  ],
+                ),
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Booking()));
+                },
+              ),
+              ListTile(
+                title: Row(
+                  children: [
                     Icon(Icons.exit_to_app),
                     SizedBox(
                       width: 8,
@@ -157,71 +182,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   ],
                 ),
                 onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => LoginScreen()));
                 },
               ),
-              
-              SizedBox(height: 32,),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    height: 38,
-                    width: 38,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.black,
-                    ),
-                    child: CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                      child: Icon(
-                        Icons.facebook,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 5,),
-                  Container(
-                    height: 38,
-                    width: 38,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.black,
-                    ),
-                    child: CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                      child: Icon(
-                        Icons.facebook,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  SizedBox(width: 5,),
-                  Container(
-                    height: 38,
-                    width: 38,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.black,
-                    ),
-                    child: CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                      child: Icon(
-                        Icons.facebook,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
+              SizedBox(
+                height: 32,
               ),
-
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Text("@ Copyright 2022 CinemaHub")),
-              )
+              // Padding(
+              //   padding: const EdgeInsets.only(top: 20),
+              //   child: Align(
+              //       alignment: Alignment.bottomCenter,
+              //       child: Text("@ Copyright 2022 CinemaHub")),
+              // )
             ],
           ),
         ),
@@ -240,25 +213,25 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      height: 250,
-                      width: MediaQuery.of(context).size.width,
-                      child: PageView.builder(
-                        controller: _pageController,
-                        itemCount: imageAssetPaths.length,
-                        itemBuilder: (_, index) {
-                          return Image.asset(
-                            imageAssetPaths[index],
-                            fit: BoxFit.cover,
-                          );
-                        },
-                        onPageChanged: (index) {
-                          setState(() {
-                            _currentPage = index;
-                          });
-                        },
-                      ),
-                    ),
+                    // Container(
+                    //   height: 250,
+                    //   width: MediaQuery.of(context).size.width,
+                    //   child: PageView.builder(
+                    //     controller: _pageController,
+                    //     itemCount: imageAssetPaths.length,
+                    //     itemBuilder: (_, index) {
+                    //       return Image.asset(
+                    //         imageAssetPaths[index],
+                    //         fit: BoxFit.cover,
+                    //       );
+                    //     },
+                    //     onPageChanged: (index) {
+                    //       setState(() {
+                    //         _currentPage = index;
+                    //       });
+                    //     },
+                    //   ),
+                    // ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(10, 12, 0, 6),
                       child: Text(
@@ -292,8 +265,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                     child: SizedBox(
                                         height: 240,
                                         width: 178,
-                                        child: Image.asset(
-                                          "assets/images/poster2.jpeg",
+                                        child: Image.network(
+                                          movie.image ??
+                                              "https://imgs.search.brave.com/Jp6ngmaC-F_2y5_7UN2IF8HtgALS20IY1-qn-o5x8EA/rs:fit:860:0:0/g:ce/aHR0cHM6Ly90My5m/dGNkbi5uZXQvanBn/LzA0LzI5LzQyLzQy/LzM2MF9GXzQyOTQy/NDI3OV9kb2tFRndu/U29KZU9LcHF2VjF0/dFh1bThwaUVTc0Y1/TC5qcGc",
                                           fit: BoxFit.cover,
                                         )),
                                   ),

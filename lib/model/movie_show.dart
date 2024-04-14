@@ -10,6 +10,7 @@ class Cinema {
   final String email;
   final String address;
 
+
   Cinema({
     required this.id,
     required this.createdAt,
@@ -94,7 +95,8 @@ class MovieShow {
   final String startTime;
   final Cinema cinema;
   final Hall hall;
-  final Movie movie; // Reference your existing Movie model here
+  final Movie movie;
+  final int price;
 
   MovieShow({
     required this.id,
@@ -105,6 +107,7 @@ class MovieShow {
     required this.cinema,
     required this.hall,
     required this.movie,
+    required this.price,
   });
 
   factory MovieShow.fromJson(Map<String, dynamic> json) {
@@ -113,10 +116,11 @@ class MovieShow {
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
       date: DateTime.parse(json['date']),
+      price: json['price'],
       startTime: json['start_time'],
       cinema: Cinema.fromJson(json['cinema']),
       hall: Hall.fromJson(json['hall']),
-      movie: Movie.fromJson(json['movie']), // Parse using your existing Movie.fromJson method
+      movie: Movie.fromJson(json['movie']), 
     );
   }
 
@@ -127,6 +131,7 @@ class MovieShow {
       'updatedAt': updatedAt.toIso8601String(),
       'date': date.toIso8601String(),
       'start_time': startTime,
+      'price': price,
       'cinema': cinema.toJson(),
       'hall': hall.toJson(),
       'movie': movie.toJson(),

@@ -62,7 +62,7 @@ class _MovieInfoState extends State<MovieInfo> {
                           width: double.infinity,
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: AssetImage("assets/images/poster2.jpeg"),
+                              image: NetworkImage(movie.image ?? "https://imgs.search.brave.com/Jp6ngmaC-F_2y5_7UN2IF8HtgALS20IY1-qn-o5x8EA/rs:fit:860:0:0/g:ce/aHR0cHM6Ly90My5m/dGNkbi5uZXQvanBn/LzA0LzI5LzQyLzQy/LzM2MF9GXzQyOTQy/NDI3OV9kb2tFRndu/U29KZU9LcHF2VjF0/dFh1bThwaUVTc0Y1/TC5qcGc"),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -73,7 +73,7 @@ class _MovieInfoState extends State<MovieInfo> {
                             right: 0,
                             bottom: 0,
                             child: Container(
-                              height: 500,
+                              // height: 500,
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 color: Colors.black,
@@ -91,7 +91,7 @@ class _MovieInfoState extends State<MovieInfo> {
                                       children: [
                                         Container(
                                           // Rooms Details Container
-                                          height: 240,
+                                          // height: 240,
                                           width: double.infinity,
                                           child: SingleChildScrollView(
                                             child: Column(

@@ -5,7 +5,7 @@ import 'package:movie_booking/model/movie.dart';
 import 'package:movie_booking/model/movie_show.dart';
 
 class MovieService {
-  static const String baseUrl = Constants.getAllMovies;
+  static String baseUrl = Constants.getAllMovies;
 
   static Future<Movie> fetchMovieInfo(int movieId) async {
     final response = await http.get(Uri.parse('$baseUrl/$movieId'));
@@ -19,10 +19,13 @@ class MovieService {
 
   static Future<List<Movie>> fetchMovies() async {
     final response = await http.get(Uri.parse(Constants.getAllMovies));
+    print("Services movies *");
     if (response.statusCode == 200) {
+      print("Response code 200 on services !");
       final List<dynamic> jsonData = json.decode(response.body)['data'];
       return jsonData.map((json) => Movie.fromJson(json)).toList();
     } else {
+      print("Failed to fetch movies");
       throw Exception('Failed to fetch movies');
     }
   }

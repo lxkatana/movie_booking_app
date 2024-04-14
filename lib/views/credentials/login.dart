@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movie_booking/services/user_services.dart';
 import 'package:movie_booking/views/credentials/register.dart';
 import 'package:movie_booking/views/screens/home.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   LoginScreen({Key? key}) : super(key: key);
@@ -19,13 +20,19 @@ class _LoginScreenState extends State<LoginScreen> {
   void _onSubmit() async {
     if (_formKey.currentState!.validate()) {
       try {
-        final success = await UserService.login(_gmail.text, _password.text);
-        if (success) {
+        final token = await UserService.login(_gmail.text, _password.text);
+        if (token != null) {
+          // Save the token to shared preferences
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('token', token);
+
+          // Login successful, navigate to home screen
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => HomeScreen()),
           );
         } else {
+          // Login failed
           print('Login failed ! Please check your credentials.');
           setState(() {
             errorMessage = 'Login failed ! Please check your credentials.';
