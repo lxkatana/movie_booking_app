@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:movie_booking/model/reservation_model.dart';
 import 'package:movie_booking/services/reservation_services.dart';
 import 'package:movie_booking/views/screens/home.dart';
-import 'package:movie_booking/model/reservation_model.dart'; // Import your reservation model
 
 class Booking extends StatefulWidget {
   Booking({this.pidx, super.key});
@@ -13,11 +13,12 @@ class Booking extends StatefulWidget {
 
 class _BookingState extends State<Booking> {
   final ReservationService _reservationService = ReservationService();
-  List<Reservation> _userReservations = [];
+  late List<Reservation> _userReservations;
 
   @override
   void initState() {
     super.initState();
+    _userReservations = []; // Initialize the reservations list
     _fetchUserReservations();
   }
 
@@ -29,8 +30,8 @@ class _BookingState extends State<Booking> {
         _userReservations = reservations;
       });
     } catch (e) {
-      // Handle error
       print('Error fetching user reservations: $e');
+      // Handle error here
     }
   }
 
@@ -60,8 +61,10 @@ class _BookingState extends State<Booking> {
             Padding(
               padding: const EdgeInsets.only(
                   left: 8.0, right: 8.0, top: 10, bottom: 10),
-              child: Text("Tickets",
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600)),
+              child: Text(
+                "Tickets",
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+              ),
             ),
             Expanded(
               child: ListView.builder(
@@ -70,18 +73,9 @@ class _BookingState extends State<Booking> {
                 itemBuilder: (context, index) {
                   Reservation reservation = _userReservations[index];
 
-                  String seatsString = '';
-                  for (int i = 0; i < reservation.seats.length; i++) {
-                    seatsString += '${reservation.seats[i].id}';
-                    if (i != reservation.seats.length - 1) {
-                      seatsString +=
-                          ', '; // Add a comma and space if it's not the last seat
-                    }
-                  }
-
-                  String dateString = reservation.show.date; // Example date string: '2024-04-12'
-DateTime dateTime = DateTime.parse(dateString);
-String formattedDate = '${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')}';
+                  // Logic to format seats string
+                  String seatsString =
+                      reservation.seats!.map((seat) => seat.seatNo).join(', ');
 
                   return Padding(
                     padding: EdgeInsets.all(10),
@@ -96,21 +90,22 @@ String formattedDate = '${dateTime.year}-${dateTime.month.toString().padLeft(2, 
                             height: 55,
                             width: 55,
                           ),
-                          // Text(
-                          //   reservation.id.toString(),
-                          //   style: TextStyle(
-                          //       fontSize: 19,
-                          //       fontWeight: FontWeight.w600,
-                          //       color: Colors.white),
-                          // ),
                           SizedBox(
                             height: 4,
                           ),
-                          // Text("Kungfu Panda 4",
-                          //     style: TextStyle(
-                          //         fontSize: 20,
-                          //         fontWeight: FontWeight.w600,
-                          //         color: Colors.white)),
+                          Text(reservation.show!.movie!.title.toString(),
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white)),
+                          SizedBox(
+                            height: 4,
+                          ),
+                          Text(reservation.show!.cinema!.name.toString(),
+                              style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white)),
                           SizedBox(
                             height: 8,
                           ),
@@ -120,61 +115,76 @@ String formattedDate = '${dateTime.year}-${dateTime.month.toString().padLeft(2, 
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Expanded(
-                                    child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    
-                                    Text(
-                                        "Date: "+formattedDate,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Date: ${reservation.show?.date}",
                                         style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.white)),
-                                    SizedBox(
-                                      height: 2,
-                                    ),
-                                    Text("Start time: "+reservation.show.start_time,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      SizedBox(height: 2),
+                                      Text(
+                                        "Start time: ${reservation.show?.startTime} ",
                                         style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.white)),
-                                    SizedBox(
-                                      height: 2,
-                                    ),
-                                    Text("Hall 1",
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      SizedBox(height: 2),
+                                      Text(
+                                        reservation.show!.hall!.name.toString(),
                                         style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.white)),
-                                  ],
-                                )),
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 Expanded(
-                                    child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(widget.pidx ?? '',
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        "Seats: $seatsString",
                                         style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.white)),
-                                    Text("Seats: " +seatsString,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      Text(
+                                        widget.pidx ?? '',
                                         style: TextStyle(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.white)),
-                                  ],
-                                )),
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ],
                             ),
                           ),
                           Padding(
                             padding:
                                 const EdgeInsets.only(top: 8.0, bottom: 8.0),
-                            child: Text("Thank you for your ticket purchase !",
-                                style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white)),
+                            child: Text(
+                              "Thank you for your ticket purchase !",
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                            ),
                           ),
                         ],
                       ),

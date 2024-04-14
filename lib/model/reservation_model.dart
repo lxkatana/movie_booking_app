@@ -1,132 +1,140 @@
 class Customer {
-  final int id;
-  final String createdAt;
-  final String updatedAt;
-  final String name;
-  final String password;
-  final String salt;
-  final String email;
-  final String phone;
+  final String? name;
 
   Customer({
-    required this.id,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.name,
-    required this.password,
-    required this.salt,
-    required this.email,
-    required this.phone,
+    this.name,
   });
 
   factory Customer.fromJson(Map<String, dynamic> json) {
     return Customer(
-      id: json['id'],
-      createdAt: json['createdAt'],
-      updatedAt: json['updatedAt'],
       name: json['name'],
-      password: json['password'],
-      salt: json['salt'],
-      email: json['email'],
-      phone: json['phone'],
     );
   }
 }
 
 class Seat {
-  final int id;
-  final String createdAt;
-  final String updatedAt;
-  final dynamic seat; // Assuming seat is a complex object, you can change its type accordingly
+  final int? id;
+  final Map<String, dynamic>? seatData;
 
   Seat({
     required this.id,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.seat,
-    
+    required this.seatData,
   });
 
   factory Seat.fromJson(Map<String, dynamic> json) {
+    final seatJson = json['seat'] as Map<String, dynamic>?;
     return Seat(
       id: json['id'],
-      createdAt: json['createdAt'],
-      updatedAt: json['updatedAt'],
-      seat: json['seat'], // Assuming seat is a complex object, you can change its type accordingly
+      seatData: seatJson,
+    );
+  }
+
+  String? get seatNo => seatData?['seat_no'];
+}
+
+class Hall {
+  final String? name;
+
+  Hall({
+    this.name,
+  });
+
+  factory Hall.fromJson(Map<String, dynamic> json) {
+    return Hall(
+      name: json['name'],
+    );
+  }
+}
+
+class Cinema {
+  final String? name;
+
+  Cinema({
+    this.name,
+  });
+
+  factory Cinema.fromJson(Map<String, dynamic> json) {
+    return Cinema(
+      name: json['name'],
+    );
+  }
+}
+
+class Movie {
+  final String? title;
+
+  Movie({
+    this.title,
+  });
+
+  factory Movie.fromJson(Map<String, dynamic> json) {
+    return Movie(
+      title: json['title'],
     );
   }
 }
 
 class Show {
-  final int id;
-  final String createdAt;
-  final String updatedAt;
-  final String date;
-  final int price;
-  final String start_time;
-  final bool isActive;
-  final dynamic deleteAt; // Assuming deleteAt can be null, you can change its type accordingly
+  final String? date;
+  final int? price;
+  final String? startTime;
+  final List<Reservation>? reservations;
+  final Hall? hall;
+  final Movie? movie;
+  final Cinema? cinema;
 
   Show({
-    required this.id,
-    required this.createdAt,
-    required this.updatedAt,
     required this.date,
     required this.price,
-    required this.start_time,
-    required this.isActive,
-    required this.deleteAt,
+    required this.startTime,
+    required this.reservations,
+    required this.hall,
+    required this.movie,
+    required this.cinema,
   });
 
   factory Show.fromJson(Map<String, dynamic> json) {
     return Show(
-      id: json['id'],
-      createdAt: json['createdAt'],
-      updatedAt: json['updatedAt'],
       date: json['date'],
       price: json['price'],
-      start_time: json['start_time'],
-      isActive: json['isActive'],
-      deleteAt: json['deleteAt'],
+      startTime: json['start_time'],
+      reservations: (json['reservations'] as List<dynamic>?)
+          ?.map((reservationJson) => Reservation.fromJson(reservationJson))
+          .toList(),
+      hall: json['hall'] != null ? Hall.fromJson(json['hall']) : null,
+      movie: json['movie'] != null ? Movie.fromJson(json['movie']) : null,
+      cinema: json['cinema'] != null ? Cinema.fromJson(json['cinema']) : null,
     );
   }
 }
 
-class Payment {
-  // Define your Payment model attributes here
-}
-
 class Reservation {
-  final int id;
-  final String createdAt;
-  final String updatedAt;
-  final String status;
-  final Customer customer;
-  final List<Seat> seats;
-  final Show show;
-  final Payment? payment; // Make payment nullable
+  final String? createdAt;
+  final String? status;
+  final Customer? customer;
+  final List<Seat>? seats;
+  final Show? show;
+  final String? payment;
 
   Reservation({
-    required this.id,
     required this.createdAt,
-    required this.updatedAt,
     required this.status,
     required this.customer,
     required this.seats,
     required this.show,
-    this.payment, // Nullable payment
+    this.payment,
   });
 
   factory Reservation.fromJson(Map<String, dynamic> json) {
     return Reservation(
-      id: json['id'],
       createdAt: json['createdAt'],
-      updatedAt: json['updatedAt'],
       status: json['status'],
-      customer: Customer.fromJson(json['customer']),
-      seats: (json['seats'] as List<dynamic>).map((seatJson) => Seat.fromJson(seatJson)).toList(),
-      show: Show.fromJson(json['show']),
-      // payment: json['payment'] != null ? Payment.fromJson(json['payment']) : null, // Parse payment if not null
+      customer: json['customer'] != null ? Customer.fromJson(json['customer']) : null,
+      seats: (json['seats'] as List<dynamic>?)
+          ?.map((seatJson) => Seat.fromJson(seatJson))
+          .toList(),
+      show: json['show'] != null ? Show.fromJson(json['show']) : null,
+      payment: json['payment'],
     );
   }
 }
