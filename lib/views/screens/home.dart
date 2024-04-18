@@ -263,13 +263,30 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   Card(
                                     child: SizedBox(
-                                        height: 240,
-                                        width: 178,
-                                        child: Image.network(
-                                          movie.image ??
-                                              "https://imgs.search.brave.com/Jp6ngmaC-F_2y5_7UN2IF8HtgALS20IY1-qn-o5x8EA/rs:fit:860:0:0/g:ce/aHR0cHM6Ly90My5m/dGNkbi5uZXQvanBn/LzA0LzI5LzQyLzQy/LzM2MF9GXzQyOTQy/NDI3OV9kb2tFRndu/U29KZU9LcHF2VjF0/dFh1bThwaUVTc0Y1/TC5qcGc",
-                                          fit: BoxFit.cover,
-                                        )),
+                                      height: 240,
+                                      width: 170,
+                                      child: Image.network(
+                                        movie.image ?? '',
+                                        fit: BoxFit.cover,
+                                        errorBuilder: (BuildContext context,
+                                            Object exception,
+                                            StackTrace? stackTrace) {
+                                          String errorMessage = '';
+                                          if (exception
+                                              is NetworkImageLoadException) {
+                                            errorMessage =
+                                                'Failed to load image: ${exception.statusCode} ${exception.uri}';
+                                          } else {
+                                            errorMessage =
+                                                'Failed to load image: $exception';
+                                          }
+                                          // Show the specific error message
+                                          return Center(
+                                            child: Text(errorMessage),
+                                          );
+                                        },
+                                      ),
+                                    ),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(top: 4, bottom: 4),

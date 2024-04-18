@@ -333,9 +333,9 @@ class _MovieHallState extends State<MovieHall> {
                     lastStartTime = movieShow.startTime;
 
                     // Skip displaying startTime if it's the same for the same cinema id
-                    if (sameCinemaId && sameStartTime) {
-                      return SizedBox.shrink();
-                    }
+                    // if (sameCinemaId && sameStartTime) {
+                    //   return SizedBox.shrink();
+                    // }
 
                     return Padding(
                       padding: const EdgeInsets.all(5.0),
@@ -370,87 +370,84 @@ class _MovieHallState extends State<MovieHall> {
                               ],
                             ),
                           SizedBox(height: 10),
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Row(
-                              children: [
-                                for (var movieShow in _todayMovieShows!)
-                                  if (movieShow.cinema.id == lastCinemaId)
-                                    Row(
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            InkWell(
-                                              onTap: () {
-                                                print("Movie Id: " +
-                                                    movieShow.id.toString());
-                                                print("Movie Name: " +
-                                                    movieShow.movie.title
-                                                        .toString());
-                                                print("Hall Id: " +
-                                                    movieShow.hall.id
-                                                        .toString());
-                                                print("Hall Name: " +
-                                                    movieShow.hall.name
-                                                        .toString());
-                                                print("Cinema Id: " +
-                                                    movieShow.cinema.id
-                                                        .toString());
-                                                print("Cinema Name: " +
-                                                    movieShow.cinema.name);
-                                                print("Start Time: " +
-                                                    movieShow.startTime);
-                                                print("Date: " +
-                                                    movieShow.date
-                                                        .toIso8601String());
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            MovieSeats(
-                                                                movieShow:
-                                                                    movieShow)));
-                                              },
-                                              child: Container(
-                                                padding: EdgeInsets.all(8),
-                                                margin:
-                                                    EdgeInsets.only(right: 10),
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      color: Colors.white),
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(12),
-                                                  ),
+                          if (!sameCinemaId)
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  // Text("----Here is a gap---", style: TextStyle(color: Colors.white)),
+                                  for (var movieShow in _todayMovieShows!)
+                                    if (movieShow.cinema.id == lastCinemaId)
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              // print("Movie Id: " +
+                                              //     movieShow.id.toString());
+                                              // print("Movie Name: " +
+                                              //     movieShow.movie.title
+                                              //         .toString());
+                                              // print("Hall Id: " +
+                                              //     movieShow.hall.id.toString());
+                                              // print("Hall Name: " +
+                                              //     movieShow.hall.name.toString());
+                                              // print("Cinema Id: " +
+                                              //     movieShow.cinema.id.toString());
+                                              // print("Cinema Name: " +
+                                              //     movieShow.cinema.name);
+                                              // print("Start Time: " +
+                                              //     movieShow.startTime);
+                                              // print("Date: " +
+                                              //     movieShow.date
+                                              //         .toIso8601String());
+                                              print("Start Time: " +
+                                                  movieShow.startTime);
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      MovieSeats(
+                                                          movieShow: movieShow),
                                                 ),
-                                                child: Text(
-                                                  movieShow.startTime,
-                                                  style: TextStyle(
-                                                    fontSize: 24,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Colors.white,
-                                                  ),
+                                              );
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.all(8),
+                                              margin:
+                                                  EdgeInsets.only(right: 10),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color: Colors.white),
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(12)),
+                                              ),
+                                              child: Text(
+                                                movieShow.startTime,
+                                                style: TextStyle(
+                                                  fontSize: 24,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.white,
                                                 ),
                                               ),
                                             ),
-                                            SizedBox(height: 6),
-                                            Text(
-                                              movieShow.hall.name,
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600,
-                                                color: Colors.white,
-                                              ),
+                                          ),
+                                          SizedBox(height: 6),
+                                          Text(
+                                            movieShow.hall.name,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.white,
                                             ),
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                              ],
+                                          ),
+                                        ],
+                                      ),
+                                  // Text("----Here is a gap---", style: TextStyle(color: Colors.white),),
+                                ],
+                              ),
                             ),
-                          ),
                         ],
                       ),
                     );
@@ -464,144 +461,129 @@ class _MovieHallState extends State<MovieHall> {
   Widget tomorrowsHallSchedule() {
     int? lastCinemaId;
     String? lastStartTime;
-    String? lastHallName;
 
     return Column(
       children: [
         Container(
-            padding: EdgeInsets.all(16),
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.black,
-              border:
-                  Border(bottom: BorderSide(color: Colors.white, width: 0.8)),
-            ),
-            child: _tomorrowMovieShows?.isEmpty ?? true
-                ? Text(
-                    'No movie data found',
-                    style: TextStyle(color: Colors.white),
-                  )
-                : ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: _tomorrowMovieShows!.length,
-                    itemBuilder: (context, index) {
-                      MovieShow movieShow = _tomorrowMovieShows![index];
-                      bool sameCinemaId = lastCinemaId == movieShow.cinema.id;
-                      bool sameStartTime = lastStartTime == movieShow.startTime;
-                      bool sameHallName = lastHallName == movieShow.hall.name;
-                      lastCinemaId = movieShow.cinema.id;
-                      lastStartTime = movieShow.startTime;
-                      lastHallName = movieShow.hall.name;
+          padding: EdgeInsets.all(16),
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.black,
+            border: Border(bottom: BorderSide(color: Colors.white, width: 0.8)),
+          ),
+          child: _tomorrowMovieShows == null || _tomorrowMovieShows!.isEmpty
+              ? Text(
+                  'No show time found',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                )
+              : ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: _tomorrowMovieShows!.length,
+                  itemBuilder: (context, index) {
+                    MovieShow movieShow = _tomorrowMovieShows![index];
+                    bool sameCinemaId = lastCinemaId == movieShow.cinema.id;
+                    bool sameStartTime = lastStartTime == movieShow.startTime;
+                    lastCinemaId = movieShow.cinema.id;
+                    lastStartTime = movieShow.startTime;
 
-                      // Skip displaying the movie show if the start time and hall name are the same as the previous one
-                      if (sameCinemaId && sameStartTime && sameHallName) {
-                        return SizedBox.shrink();
-                      }
-
-                      return Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            if (!sameCinemaId)
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                    return Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (!sameCinemaId)
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      movieShow.cinema.name,
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    Text(
+                                      movieShow.cinema.address,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              ],
+                            ),
+                          SizedBox(height: 10),
+                          if (!sameCinemaId)
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
                                 children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        movieShow.cinema.name,
-                                        style: TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                        ),
+                                  for (var movieShow in _tomorrowMovieShows!)
+                                    if (movieShow.cinema.id == lastCinemaId)
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          InkWell(
+                                            onTap: () {
+                                              print("Start Time: " +
+                                                  movieShow.startTime);
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      MovieSeats(
+                                                          movieShow: movieShow),
+                                                ),
+                                              );
+                                            },
+                                            child: Container(
+                                              padding: EdgeInsets.all(8),
+                                              margin:
+                                                  EdgeInsets.only(right: 10),
+                                              decoration: BoxDecoration(
+                                                border: Border.all(
+                                                    color: Colors.white),
+                                                borderRadius: BorderRadius.all(
+                                                  Radius.circular(12),
+                                                ),
+                                              ),
+                                              child: Text(
+                                                movieShow.startTime,
+                                                style: TextStyle(
+                                                  fontSize: 24,
+                                                  fontWeight: FontWeight.w500,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 6),
+                                          Text(
+                                            movieShow.hall.name,
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w600,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      Text(
-                                        movieShow.cinema.address,
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w400,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ],
-                                  )
                                 ],
                               ),
-                            SizedBox(height: 10),
-                            Align(
-                              alignment: Alignment.bottomLeft,
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: [
-                                    for (var movieShow in _tomorrowMovieShows!)
-                                      if (movieShow.cinema.id == lastCinemaId)
-                                        Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: [
-                                                InkWell(
-                                                  onTap: () {
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                MovieSeats(
-                                                                    movieShow:
-                                                                        movieShow)));
-                                                  },
-                                                  child: Container(
-                                                    padding: EdgeInsets.all(8),
-                                                    margin: EdgeInsets.only(
-                                                        right: 10),
-                                                    decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                          color: Colors.white),
-                                                      borderRadius:
-                                                          BorderRadius.all(
-                                                        Radius.circular(12),
-                                                      ),
-                                                    ),
-                                                    child: Text(
-                                                      movieShow.startTime,
-                                                      style: TextStyle(
-                                                        fontSize: 24,
-                                                        fontWeight:
-                                                            FontWeight.w500,
-                                                        color: Colors.white,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                SizedBox(height: 6),
-                                                Text(
-                                                  movieShow.hall.name,
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w600,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        )
-                                  ],
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                      );
-                    })),
+                            ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+        ),
       ],
     );
   }

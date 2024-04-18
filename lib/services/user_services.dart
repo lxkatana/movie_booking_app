@@ -4,7 +4,8 @@ import 'package:movie_booking/model/user_model.dart';
 import 'dart:convert';
 
 class UserService {
-  static Future<String?> login(String email, String password) async {
+  static Future<Map<String, dynamic>?> login(
+      String email, String password) async {
     try {
       final response = await http.post(
         Uri.parse(Constants.loginUrl),
@@ -17,7 +18,9 @@ class UserService {
         print("200");
         final responseData = json.decode(response.body);
         final token = responseData['data']['token'];
-        return token;
+        final name =
+            responseData['data']['name']; // Fetch the name from the response
+        return {'token': token, 'name': name}; // Return both token and name
       } else {
         print("500");
         return null;
@@ -30,13 +33,13 @@ class UserService {
   }
 
   static Future<bool> sendOTP(String email) async {
-    final mainUrl = Constants.baseUrl + Constants.registerOtpUrl;
+    final mainUrl = Constants.registerOtpUrl;
     print("Main URL: " + mainUrl);
     print("base URL: " + Constants.baseUrl);
     print("registerOtp URL: " + Constants.registerOtpUrl);
     try {
       final response = await http.post(
-        Uri.parse(mainUrl),
+        Uri.parse(Constants.registerOtpUrl),
         body: {'email': email, 'purpose': 'signupCustomer'},
       );
 
@@ -56,7 +59,7 @@ class UserService {
   static Future<bool> registerUser(User user, String otp) async {
     try {
       final response = await http.post(
-        Uri.parse(Constants.baseUrl + Constants.registerUrl),
+        Uri.parse(Constants.registerUrl),
         body: jsonEncode({
           'name': user.name,
           'email': user.email,

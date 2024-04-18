@@ -20,11 +20,18 @@ class _LoginScreenState extends State<LoginScreen> {
   void _onSubmit() async {
     if (_formKey.currentState!.validate()) {
       try {
-        final token = await UserService.login(_gmail.text, _password.text);
-        if (token != null) {
-          // Save the token to shared preferences
+        final userData = await UserService.login(_gmail.text, _password.text);
+        if (userData != null &&
+            userData['token'] != null &&
+            userData['name'] != null) {
+          final String token = userData['token'];
+          final String name = userData['name'];
+
+          // Save the token and name to shared preferences
           final prefs = await SharedPreferences.getInstance();
           await prefs.setString('token', token);
+          await prefs.setString('name', name);
+          await prefs.setString('gmail', _gmail.text);
 
           // Login successful, navigate to home screen
           Navigator.push(

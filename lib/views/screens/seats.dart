@@ -185,248 +185,249 @@ class _MovieSeatsState extends State<MovieSeats> {
             ),
           ),
         ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 26.0, right: 26.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.movieShow.movie.title,
-                    style: const TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w600,
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 26.0, right: 26.0, top: 18, bottom: 18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.movieShow.movie.title,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    widget.movieShow.cinema.name +
-                        " | " +
-                        widget.movieShow.hall.name,
-                    style: const TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w500,
+                    const SizedBox(
+                      height: 5,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    '${widget.movieShow.date} | ${widget.movieShow.startTime}',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
+                    Text(
+                      widget.movieShow.cinema.name +
+                          " | " +
+                          widget.movieShow.hall.name,
+                      style: const TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                ],
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      '${widget.movieShow.date} | ${widget.movieShow.startTime}',
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-                  child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 10,
-                    ),
-                    itemCount: seatStatus.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      final seat = seatStatus[index];
-                      Color seatColor;
-
-                      if (reservedSeatNumbers
-                          .contains(seat.seatNumber.toString())) {
-                        // If the seat ID is in the reservedSeatNumbers list, set color to red
-                        seatColor = Colors.red;
-                      } else if (hiddenSeatNumbers.any((hiddenSeat) =>
-                          hiddenSeat['id'] == seat.seatId.toString())) {
-                        // If the seat is hidden, set the color to blur color (e.g., blue)
-                        seatColor = Colors.blue;
-                        if (selectedSeats.contains(seat) && !seat.isReserved) {
-                          // If the seat is selected and not reserved, change its color to green
-                          seatColor = Colors.green;
+              Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 24.0, right: 24.0, top: 16, bottom: 16),
+                    child: GridView.builder(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 10,
+                      ),
+                      itemCount: seatStatus.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        final seat = seatStatus[index];
+                        Color seatColor;
+          
+                        if (reservedSeatNumbers
+                            .contains(seat.seatNumber.toString())) {
+                          // If the seat ID is in the reservedSeatNumbers list, set color to red
+                          seatColor = Colors.red;
+                        } else if (hiddenSeatNumbers.any((hiddenSeat) =>
+                            hiddenSeat['id'] == seat.seatId.toString())) {
+                          // If the seat is hidden, set the color to blur color (e.g., blue)
+                          seatColor = Colors.blue;
+                          if (selectedSeats.contains(seat) && !seat.isReserved) {
+                            // If the seat is selected and not reserved, change its color to green
+                            seatColor = Colors.green;
+                          }
+                        } else {
+                          // If the seat is not reserved or hidden, set the color to transparent
+                          seatColor = Colors.white;
                         }
-                      } else {
-                        // If the seat is not reserved or hidden, set the color to transparent
-                        seatColor = Colors.white;
-                      }
-
-                      return Padding(
-                        padding: const EdgeInsets.all(2),
-                        child: GestureDetector(
-                          onTap: () {
-                            // Check if the seat is not reserved before toggling selection
-                            if (!seat.isReserved) {
-                              _toggleSeatSelection(seat);
-                            }
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: seatColor,
-                            ),
-                            height: 20,
-                            width: 20,
-                            child: Center(
-                              child: Text(
-                                seat.seatNumber,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
+          
+                        return Padding(
+                          padding: const EdgeInsets.all(2),
+                          child: GestureDetector(
+                            onTap: () {
+                              // Check if the seat is not reserved before toggling selection
+                              if (!seat.isReserved) {
+                                _toggleSeatSelection(seat);
+                              }
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(5),
+                                color: seatColor,
+                              ),
+                              height: 20,
+                              width: 20,
+                              child: Center(
+                                child: Text(
+                                  seat.seatNumber,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
                                 ),
                               ),
                             ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Row(
-                          children: [
-                            Container(
-                              height: 20,
-                              width: 18,
-                              color: Colors.blue,
-                            ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            const Text("Available"),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Row(
-                          children: [
-                            Container(
-                              height: 20,
-                              width: 18,
-                              color: Colors.red,
-                            ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            const Text("Reserved"),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Row(
-                          children: [
-                            Container(
-                              height: 20,
-                              width: 18,
-                              color: Colors.green,
-                            ),
-                            const SizedBox(
-                              width: 5,
-                            ),
-                            const Text("Selected"),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: Column(
-                    children: [
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Column(
+                  Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Row(
                             children: [
-                              Row(
-                                children: [
-                                  const Text(
-                                    'No. of Seats Booked: ',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Text(
-                                    '${selectedSeats.length}',
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
+                              Container(
+                                height: 20,
+                                width: 18,
+                                color: Colors.blue,
                               ),
                               const SizedBox(
-                                height: 7,
+                                width: 5,
                               ),
-                              Row(
-                                children: [
-                                  const Text(
-                                    'Total Price: \$',
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Spacer(),
-                                  Text(
-                                    '${selectedSeats.length * seatPrice}',
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                              const Text("Available"),
                             ],
                           ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 18.0),
-                        child: SizedBox(
-                          height: 50,
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            // onPressed: _bookSeats,
-                            onPressed: payWithKhaltiInApp,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.black87,
-                            ),
-                            child: const Text(
-                              'Book Seats',
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 20,
+                                width: 18,
+                                color: Colors.red,
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              const Text("Reserved"),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: Row(
+                            children: [
+                              Container(
+                                height: 20,
+                                width: 18,
+                                color: Colors.green,
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              const Text("Selected"),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    const Text(
+                                      'No. of Seats Booked: ',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    Text(
+                                      '${selectedSeats.length}',
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(
+                                  height: 7,
+                                ),
+                                Row(
+                                  children: [
+                                    const Text(
+                                      'Total Price: \$',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    Text(
+                                      '${selectedSeats.length * seatPrice}',
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.only(top: 18.0),
+                          child: SizedBox(
+                            height: 50,
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: payWithKhaltiInApp,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black87,
+                              ),
+                              child: const Text(
+                                'Book Seats',
+                                style:
+                                    TextStyle(fontSize: 16, color: Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -551,7 +552,6 @@ class _MovieSeatsState extends State<MovieSeats> {
 
     // Convert the payload to JSON
     String payloadJson = json.encode(payload);
-    print("---:  " + payloadJson);
 
     try {
       // Define the headers for the request

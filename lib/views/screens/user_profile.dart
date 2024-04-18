@@ -1,8 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:movie_booking/views/screens/home.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends StatefulWidget {
   ProfilePage({super.key});
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  String? _name = ''; // Initialize with an empty string
+  String? gmail = ''; // Initialize with an empty string
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDataFromSharedPreferences();
+  }
+
+  Future<void> fetchDataFromSharedPreferences() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _name = prefs.getString('name');
+      gmail = prefs.getString('gmail');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,14 +76,15 @@ class ProfilePage extends StatelessWidget {
                     child: CircleAvatar(
                       radius: 85,
                       backgroundImage:
-                          AssetImage("assets/images/poster3.jpeg"),
+                          NetworkImage("https://imgs.search.brave.com/yWXWHBTAAnm3pQof7RJ3JtjAxMGg2QF5h6wFelNYJSU/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9hc3Nl/dHMua29udGVudC5h/aS80ZWMyNjJhNy0z/ZDZjLTAwOGMtYWEx/MC0xZTZmZmM2YzJl/MTQvYjJjNWEzNmIt/NjZhYy00NWZmLTkw/MmUtNjNkMTJiZWYz/ZDY2L2Nsb3VkaW5h/cnlfaW50ZWdyYXRp/b24ucG5nP3c9ODAw/JnE9NzUmbG9zc2xl/c3M9ZmFsc2UmYXV0/bz1mb3JtYXQ"),
+                          
                     ),
                   ),
                   SizedBox(
                     height: 16,
                   ),
                   Text(
-                    "Rajesh Hamal",
+                    _name ?? '',
                     style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
@@ -70,17 +94,12 @@ class ProfilePage extends StatelessWidget {
                     height: 5,
                   ),
                   Text(
-                    "rajesh21@gmail.com",
+                    gmail ?? '',
                     style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Colors.white),
                   ),
-                  SizedBox(
-                    height: 4,
-                  ),
-                  Text("9806547332",
-                      style: TextStyle(fontSize: 16, color: Colors.white)),
                 ],
               ),
               SizedBox(height: 28),

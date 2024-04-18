@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:khalti_flutter/khalti_flutter.dart';
+import 'package:movie_booking/views/credentials/login.dart';
 import 'package:movie_booking/views/screens/home.dart';
 
 class MyApp extends StatelessWidget {
@@ -13,7 +14,7 @@ class MyApp extends StatelessWidget {
       builder: (context, navKey) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
-          home: HomeScreen(),
+          home: LoginScreen(),
           navigatorKey: navKey,
           localizationsDelegates: const[
             KhaltiLocalizations.delegate
