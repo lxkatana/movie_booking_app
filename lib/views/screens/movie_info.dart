@@ -106,45 +106,6 @@ class _MovieInfoState extends State<MovieInfo> {
                                                           fontSize: 28,
                                                           color: Colors.white),
                                                     ),
-                                                    Spacer(),
-                                                    Container(
-                                                      height: 32,
-                                                      width: 60,
-                                                      padding: EdgeInsets.only(
-                                                          left: 5, right: 5),
-                                                      decoration: BoxDecoration(
-                                                          color: Colors.grey,
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius
-                                                                      .circular(
-                                                                          20))),
-                                                      child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
-                                                          children: [
-                                                            Icon(
-                                                              Icons.star,
-                                                              color:
-                                                                  Colors.white,
-                                                              size: 18,
-                                                            ),
-                                                            SizedBox(
-                                                              width: 2,
-                                                            ),
-                                                            Text(
-                                                              '4.5',
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
-                                                                  fontSize: 17),
-                                                            )
-                                                          ]),
-                                                    ),
                                                   ],
                                                 ),
                                                 SizedBox(

@@ -21,15 +21,12 @@ class ReservationService {
         headers: {'Authorization': 'Bearer $authToken'},
       );
       print("Token: " + authToken.toString());
-      print("- 200");
       final dynamic jsonData = json.decode(response.body);
       if (jsonData == null || !(jsonData is Map<String, dynamic>)) {
         throw Exception('Invalid data received from the server');
       }
 
-      print("-- 200");
       final List<dynamic> reservationData = jsonData['data'];
-      print("--- 200");
       print(reservationData);
       if (reservationData == null) {
         return [];

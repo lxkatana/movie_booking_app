@@ -13,5 +13,6 @@ class Constants {
   static String reserveSeats= baseUrl + 'reservation';
   static String paymentSeats= baseUrl + 'payment';
   static String userReservations= baseUrl + 'reservation/bookings';
+  static String changePassword = baseUrl + 'user/change-password';
 }
 

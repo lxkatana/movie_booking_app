@@ -191,7 +191,8 @@ class _MovieSeatsState extends State<MovieSeats> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 26.0, right: 26.0, top: 18, bottom: 18),
+                padding: const EdgeInsets.only(
+                    left: 26.0, right: 26.0, top: 18, bottom: 18),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -230,7 +231,8 @@ class _MovieSeatsState extends State<MovieSeats> {
               Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 24.0, right: 24.0, top: 16, bottom: 16),
+                    padding: const EdgeInsets.only(
+                        left: 24.0, right: 24.0, top: 16, bottom: 16),
                     child: GridView.builder(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
@@ -241,7 +243,7 @@ class _MovieSeatsState extends State<MovieSeats> {
                       itemBuilder: (context, index) {
                         final seat = seatStatus[index];
                         Color seatColor;
-          
+
                         if (reservedSeatNumbers
                             .contains(seat.seatNumber.toString())) {
                           // If the seat ID is in the reservedSeatNumbers list, set color to red
@@ -250,7 +252,8 @@ class _MovieSeatsState extends State<MovieSeats> {
                             hiddenSeat['id'] == seat.seatId.toString())) {
                           // If the seat is hidden, set the color to blur color (e.g., blue)
                           seatColor = Colors.blue;
-                          if (selectedSeats.contains(seat) && !seat.isReserved) {
+                          if (selectedSeats.contains(seat) &&
+                              !seat.isReserved) {
                             // If the seat is selected and not reserved, change its color to green
                             seatColor = Colors.green;
                           }
@@ -258,7 +261,7 @@ class _MovieSeatsState extends State<MovieSeats> {
                           // If the seat is not reserved or hidden, set the color to transparent
                           seatColor = Colors.white;
                         }
-          
+
                         return Padding(
                           padding: const EdgeInsets.all(2),
                           child: GestureDetector(
@@ -409,14 +412,16 @@ class _MovieSeatsState extends State<MovieSeats> {
                             height: 50,
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: payWithKhaltiInApp,
+                              onPressed: selectedSeats.isNotEmpty
+                                  ? payWithKhaltiInApp
+                                  : null,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.black87,
                               ),
                               child: const Text(
                                 'Book Seats',
-                                style:
-                                    TextStyle(fontSize: 16, color: Colors.white),
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.white),
                               ),
                             ),
                           ),
@@ -464,7 +469,6 @@ class _MovieSeatsState extends State<MovieSeats> {
   }
 
   Future<void> _bookSeats(String pidx) async {
-    // Obtain the authentication token from shared preferences
     String? token = await getTokenFromSharedPreferences();
 
     print("Token: ${token}");
@@ -474,12 +478,12 @@ class _MovieSeatsState extends State<MovieSeats> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Authentication token is not available')),
       );
-      return; // Exit the method
+      return;
     }
 
     // Prepare the payload for the reservation request
     Map<String, dynamic> payload = {
-      'status': 'reserved',
+      'status': 'booked',
       'seats': selectedSeats.map((seat) => seat.seatId).toList(),
     };
 
@@ -503,22 +507,17 @@ class _MovieSeatsState extends State<MovieSeats> {
 
       if (response.statusCode == 200) {
         print("Seats reserved successfully");
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(content: Text('Seats reserved successfully')),
-        // );
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => Booking(pidx: pidx)),
         );
       } else {
-        // Reservation failed
-        // Show an error message or handle the failure appropriately
         print('Failed to reserve seats: ${response.statusCode}');
-        // ScaffoldMessenger.of(context).showSnackBar(
-        //   SnackBar(
-        //     content: Text('Failed to reserve seats: ${response.statusCode}'),
-        //   ),
-        // );
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to reserve seats: ${response.statusCode}'),
+          ),
+        );
       }
     } catch (e) {
       // Handle any errors that occur during the reservation request
@@ -544,28 +543,29 @@ class _MovieSeatsState extends State<MovieSeats> {
     }
 
     // Prepare the payload for the reservation request
-    Map<String, dynamic> payload = {
+    Map<String, dynamic> _payload = {
       'seats': selectedSeats.map((seat) => seat.seatId).toList(),
       'amountInRs': widget.movieShow.price,
       'pidx': pidx,
     };
 
     // Convert the payload to JSON
-    String payloadJson = json.encode(payload);
+    String _payloadJson = json.encode(_payload);
 
     try {
       // Define the headers for the request
       Map<String, String> headers = {
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token', // Include the auth token here
+        'Authorization': 'Bearer $token',
       };
 
       // Make the reservation request
       final response = await http.post(
         Uri.parse(Constants.paymentSeats + '/${widget.movieShow.id}'),
         headers: headers,
-        body: payloadJson,
+        body: _payloadJson,
       );
+      print("Payment: " + response.headers.toString());
       print("Payment Data: " + response.body);
 
       if (response.statusCode == 200) {

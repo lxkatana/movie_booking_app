@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:movie_booking/model/reservation_model.dart';
 import 'package:movie_booking/services/reservation_services.dart';
 import 'package:movie_booking/views/screens/home.dart';
+import 'package:movie_booking/views/screens/user_profile.dart';
 
 class Booking extends StatefulWidget {
   Booking({this.pidx, super.key});
   final String? pidx;
+  
 
   @override
   State<Booking> createState() => _BookingState();
@@ -14,6 +16,7 @@ class Booking extends StatefulWidget {
 class _BookingState extends State<Booking> {
   final ReservationService _reservationService = ReservationService();
   late List<Reservation> _userReservations;
+  int _selectedIndex = 2; // For bottom screen Navigator
 
   @override
   void initState() {
@@ -32,6 +35,35 @@ class _BookingState extends State<Booking> {
     } catch (e) {
       print('Error fetching user reservations: $e');
       // Handle error here
+    }
+  }
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+
+    switch (_selectedIndex) {
+      case 0:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomeScreen()),
+        );
+        break;
+      case 1:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => ProfilePage()),
+        );
+        break;
+      case 2:
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Booking()),
+        );
+        break;
+      default:
+        break;
     }
   }
 
@@ -93,11 +125,14 @@ class _BookingState extends State<Booking> {
                           SizedBox(
                             height: 4,
                           ),
-                          Text(reservation.show!.movie!.title.toString(),
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white)),
+                          Text(
+                            reservation.show!.movie?.title ?? 'Unknown Title',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
+                          ),
                           SizedBox(
                             height: 4,
                           ),
@@ -194,6 +229,27 @@ class _BookingState extends State<Booking> {
               ),
             ),
           ],
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.black,
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home, color: Colors.grey[300]),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.people, color: Colors.grey[300]),
+              label: 'Profile',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.local_movies, color: Colors.grey[300]),
+              label: 'My Tickets',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.grey[300],
+          onTap: _onItemTapped,
         ),
       ),
     );

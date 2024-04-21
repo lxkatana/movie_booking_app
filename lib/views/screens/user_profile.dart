@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:movie_booking/views/credentials/login.dart';
+import 'package:movie_booking/views/screens/changePassword.dart';
 import 'package:movie_booking/views/screens/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -10,8 +12,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  String? _name = ''; // Initialize with an empty string
-  String? gmail = ''; // Initialize with an empty string
+  String? _name = '';
+  String? gmail = '';
 
   @override
   void initState() {
@@ -27,6 +29,11 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
+  Future<void> clearSharedPreferences() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -36,7 +43,8 @@ class _ProfilePageState extends State<ProfilePage> {
           leading: IconButton(
             icon: Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => HomeScreen()));
             },
           ),
           title: Padding(
@@ -75,9 +83,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     child: CircleAvatar(
                       radius: 85,
-                      backgroundImage:
-                          NetworkImage("https://imgs.search.brave.com/yWXWHBTAAnm3pQof7RJ3JtjAxMGg2QF5h6wFelNYJSU/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9hc3Nl/dHMua29udGVudC5h/aS80ZWMyNjJhNy0z/ZDZjLTAwOGMtYWEx/MC0xZTZmZmM2YzJl/MTQvYjJjNWEzNmIt/NjZhYy00NWZmLTkw/MmUtNjNkMTJiZWYz/ZDY2L2Nsb3VkaW5h/cnlfaW50ZWdyYXRp/b24ucG5nP3c9ODAw/JnE9NzUmbG9zc2xl/c3M9ZmFsc2UmYXV0/bz1mb3JtYXQ"),
-                          
+                      backgroundImage: NetworkImage(
+                          "https://imgs.search.brave.com/yWXWHBTAAnm3pQof7RJ3JtjAxMGg2QF5h6wFelNYJSU/rs:fit:860:0:0/g:ce/aHR0cHM6Ly9hc3Nl/dHMua29udGVudC5h/aS80ZWMyNjJhNy0z/ZDZjLTAwOGMtYWEx/MC0xZTZmZmM2YzJl/MTQvYjJjNWEzNmIt/NjZhYy00NWZmLTkw/MmUtNjNkMTJiZWYz/ZDY2L2Nsb3VkaW5h/cnlfaW50ZWdyYXRp/b24ucG5nP3c9ODAw/JnE9NzUmbG9zc2xl/c3M9ZmFsc2UmYXV0/bz1mb3JtYXQ"),
                     ),
                   ),
                   SizedBox(
@@ -106,17 +113,18 @@ class _ProfilePageState extends State<ProfilePage> {
               Expanded(
                 child: ListView(
                   children: [
-                    // buildListTile('Edit Profile', Icons.person, () {
-                    //   // Add your onTap functionality here
-                    // }),
-                    buildListTile('About us', Icons.question_mark, () {
-                      // Add your onTap functionality here
-                    }),
-                    buildListTile('Help Center', Icons.bubble_chart, () {
-                      // Add your onTap functionality here
+                    buildListTile('Change Password', Icons.key, () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ChangePasswordPage()));
                     }),
                     buildListTile('Logout', Icons.exit_to_app, () {
-                      // Add your onTap functionality here
+                      clearSharedPreferences();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()));
                     }),
                   ],
                 ),
@@ -148,7 +156,9 @@ class _ProfilePageState extends State<ProfilePage> {
             Text(
               title,
               style: TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.w500, color: Colors.white),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white),
             ),
             Spacer(),
             Icon(icon, color: Colors.white),
