@@ -455,7 +455,7 @@ class _MovieSeatsState extends State<MovieSeats> {
   void onSuccess(PaymentSuccessModel success) {
     pidx = success.idx;
     _bookSeats(pidx);
-    _seatPayment(pidx);
+    // _seatPayment(pidx);
   }
 
   void onFailure(PaymentFailureModel failure) {
