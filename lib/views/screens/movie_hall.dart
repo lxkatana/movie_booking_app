@@ -176,26 +176,18 @@ class _MovieHallState extends State<MovieHall> {
                               children: [
                                 Container(
                                   padding: EdgeInsets.only(
-                                      left: 20, right: 20, top: 10),
+                                      left: 17, top: 10),
                                   height: 200,
                                   width: double.infinity,
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      // Text(
-                                      //   "Movie Id: ${firstMovieShow.movie.id}",
-                                      //   style: TextStyle(
-                                      //     fontWeight: FontWeight.bold,
-                                      //     fontSize: 22,
-                                      //     color: Colors.white,
-                                      //   ),
-                                      // ),
                                       Text(
                                         "Title: ${firstMovieShow.movie.title}",
                                         style: TextStyle(
                                           fontWeight: FontWeight.w700,
-                                          fontSize: 22,
+                                          fontSize: 18,
                                           color: Colors.white,
                                         ),
                                       ),
@@ -203,7 +195,7 @@ class _MovieHallState extends State<MovieHall> {
                                         "Genre: ${firstMovieShow.movie.genre}",
                                         style: TextStyle(
                                           fontWeight: FontWeight.w600,
-                                          fontSize: 19,
+                                          fontSize: 17,
                                           color: Colors.white,
                                         ),
                                       ),
@@ -211,7 +203,7 @@ class _MovieHallState extends State<MovieHall> {
                                         "Duration: ${firstMovieShow.movie.durationInMinute} min",
                                         style: TextStyle(
                                           fontWeight: FontWeight.w500,
-                                          fontSize: 17,
+                                          fontSize: 16,
                                           color: Colors.white,
                                         ),
                                       ),
@@ -319,7 +311,7 @@ class _MovieHallState extends State<MovieHall> {
           ),
           child: _todayMovieShows == null || _todayMovieShows!.isEmpty
               ? Text(
-                  'No show time found',
+                  'Comming soon',
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 )
               : ListView.builder(
@@ -473,7 +465,7 @@ class _MovieHallState extends State<MovieHall> {
           ),
           child: _tomorrowMovieShows == null || _tomorrowMovieShows!.isEmpty
               ? Text(
-                  'No show time found',
+                  'Comming soon',
                   style: TextStyle(color: Colors.white, fontSize: 16),
                 )
               : ListView.builder(

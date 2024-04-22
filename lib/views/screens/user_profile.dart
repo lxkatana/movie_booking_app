@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movie_booking/views/credentials/login.dart';
+import 'package:movie_booking/views/screens/aboutus.dart';
 import 'package:movie_booking/views/screens/changePassword.dart';
 import 'package:movie_booking/views/screens/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -118,6 +119,12 @@ class _ProfilePageState extends State<ProfilePage> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => ChangePasswordPage()));
+                    }),
+                    buildListTile('About us', Icons.exit_to_app, () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => AboutusPage()));
                     }),
                     buildListTile('Logout', Icons.exit_to_app, () {
                       clearSharedPreferences();

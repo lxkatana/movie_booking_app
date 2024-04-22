@@ -3,11 +3,11 @@ import 'package:movie_booking/model/reservation_model.dart';
 import 'package:movie_booking/services/reservation_services.dart';
 import 'package:movie_booking/views/screens/home.dart';
 import 'package:movie_booking/views/screens/user_profile.dart';
+import 'package:intl/intl.dart';
 
 class Booking extends StatefulWidget {
   Booking({this.pidx, super.key});
   final String? pidx;
-  
 
   @override
   State<Booking> createState() => _BookingState();
@@ -126,7 +126,7 @@ class _BookingState extends State<Booking> {
                             height: 4,
                           ),
                           Text(
-                            reservation.show!.movie?.title ?? 'Unknown Title',
+                            reservation.show!.movie?.title ?? ' ',
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
@@ -155,7 +155,7 @@ class _BookingState extends State<Booking> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "Date: ${reservation.show?.date}",
+                                        "Date: ${reservation.show!.date != null ? DateFormat('yyyy-MM-dd').format(DateTime.parse(reservation.show!.date!)) : ' '}",
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500,
@@ -164,7 +164,9 @@ class _BookingState extends State<Booking> {
                                       ),
                                       SizedBox(height: 2),
                                       Text(
-                                        "Start time: ${reservation.show?.startTime} ",
+                                        "Hall: " +
+                                            reservation.show!.hall!.name
+                                                .toString(),
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500,
@@ -173,7 +175,9 @@ class _BookingState extends State<Booking> {
                                       ),
                                       SizedBox(height: 2),
                                       Text(
-                                        reservation.show!.hall!.name.toString(),
+                                        widget.pidx != null
+                                            ? 'Ticket id: ${widget.pidx}'
+                                            : '',
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500,
@@ -196,7 +200,7 @@ class _BookingState extends State<Booking> {
                                         ),
                                       ),
                                       Text(
-                                        widget.pidx ?? '',
+                                        "Start time: ${reservation.show?.startTime} ",
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w500,

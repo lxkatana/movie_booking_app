@@ -1,5 +1,5 @@
 class Constants {
-  static final String baseUrl = 'http://192.168.1.69:8080/';
+  static final String baseUrl = 'http://172.16.19.118:8080/';
 
   static String loginUrl = baseUrl + 'auth/login';
   static String registerUrl = baseUrl + 'auth/register/user';

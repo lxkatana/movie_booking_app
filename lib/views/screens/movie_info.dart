@@ -90,8 +90,6 @@ class _MovieInfoState extends State<MovieInfo> {
                                     child: Column(
                                       children: [
                                         Container(
-                                          // Rooms Details Container
-                                          // height: 240,
                                           width: double.infinity,
                                           child: SingleChildScrollView(
                                             child: Column(
